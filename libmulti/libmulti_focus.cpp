@@ -25,7 +25,7 @@ LIBMULTI_DOUBLE libmulti_get_active_window(void) {
 			HWND window = vecWindows[i].first;
 			if (window == nullptr) continue; // nope.
 			if (h == window) {
-				ret = i;
+				ret = static_cast<double>(i);
 				break;
 			}
 		}
@@ -47,7 +47,7 @@ LIBMULTI_DOUBLE libmulti_get_foreground_window(void) {
 			HWND window = vecWindows[i].first;
 			if (window == nullptr) continue; // nope.
 			if (h == window) {
-				ret = i;
+				ret = static_cast<double>(i);
 				break;
 			}
 		}

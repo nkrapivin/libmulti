@@ -24,5 +24,5 @@ DWORD WINAPI libmulti_window_thread(LPVOID lpThreadParameter) {
 	}
 
 	CoUninitialize();
-	return msg.wParam;
+	return static_cast<DWORD>(msg.wParam);
 }

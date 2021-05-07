@@ -174,12 +174,12 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 		maxH = userdata[4];
 
 	CMultiD2D* d2d = nullptr;
-	if (_libmulti_exists(wind)) {
+	if (_libmulti_exists(static_cast<double>(wind))) {
 		d2d = vecWindows[wind].second;
 	}
 
 	// gm stuff, ignore:
-	const double window = wind;
+	const double window = static_cast<double>(wind);
 	const double zero = 0.0;
 	
 
@@ -208,7 +208,7 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 			// size - 1 because the function won't handle a null byte.
 			WideCharToMultiByte(CP_UTF8, 0, &wch, 1, mch, sizeof(mch) - 1, nullptr, nullptr);
 
-			double w_char = wParam;
+			double w_char = static_cast<double>(wParam);
 			// me can't do bit arithmetic so there we go:
 			double w_repeat_count = LOWORD(lParam);
 			double w_scancode     = (HIWORD(lParam) & 0x00FF);
@@ -339,8 +339,8 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 
 			if (minW > 0 && minH > 0) {
 				SetRectEmpty(&rc);
-				rc.right = minW; rc.bottom = minH;
-				AdjustWindowRectEx(&rc, styles, GetMenu(hWnd) != nullptr, exstyles);
+				rc.right = static_cast<LONG>(minW); rc.bottom = static_cast<LONG>(minH);
+				AdjustWindowRectEx(&rc, static_cast<DWORD>(styles), GetMenu(hWnd) != nullptr, static_cast<DWORD>(exstyles));
 				rc.right -= rc.left;
 				rc.bottom -= rc.top;
 
@@ -350,8 +350,8 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 
 			if (maxW > 0 && maxH > 0) {
 				SetRectEmpty(&rc);
-				rc.right = maxW; rc.bottom = maxH;
-				AdjustWindowRectEx(&rc, styles, GetMenu(hWnd) != nullptr, exstyles);
+				rc.right = static_cast<LONG>(maxW); rc.bottom = static_cast<LONG>(maxH);
+				AdjustWindowRectEx(&rc, static_cast<DWORD>(styles), GetMenu(hWnd) != nullptr, static_cast<DWORD>(exstyles));
 				rc.right -= rc.left;
 				rc.bottom -= rc.top;
 
@@ -478,7 +478,7 @@ LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _
 	std::pair<HWND, int>* startup = new std::pair<HWND, int>(window, S);
 	DWORD threadId = 0;
 	intptr_t* userdata = new intptr_t[7];
-	int ind = _libmulti_find_free();
+	std::size_t ind = _libmulti_find_free();
 	userdata[0] = ind;
 	userdata[1] = minW;
 	userdata[2] = minH;
@@ -498,7 +498,7 @@ LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _
 	LeaveVector();
 
 	CreateThread(nullptr, 0, libmulti_window_thread, startup, 0, &threadId);
-	return ind;
+	return static_cast<double>(ind);
 }
 
 LIBMULTI_DOUBLE libmulti_destroy(double index) {

@@ -98,7 +98,7 @@ LIBMULTI_DOUBLE libmulti_set_x(double index, double x) {
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 
 		RECT empty; SetRectEmpty(&empty);
-		AdjustWindowRectEx(&empty, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		AdjustWindowRectEx(&empty, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		RECT client;
 		GetClientRect(window, &client);
 		POINT p{ 0, client.top };
@@ -119,7 +119,7 @@ LIBMULTI_DOUBLE libmulti_set_y(double index, double y) {
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 
 		RECT empty; SetRectEmpty(&empty);
-		AdjustWindowRectEx(&empty, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		AdjustWindowRectEx(&empty, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		RECT client;
 		GetClientRect(window, &client);
 		POINT p{ 0, client.top };
@@ -143,7 +143,7 @@ LIBMULTI_DOUBLE libmulti_set_position(double index, double x, double y) {
 		// get the offsets of the non-client area
 		RECT rc;
 		SetRectEmpty(&rc);
-		AdjustWindowRectEx(&rc, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		AdjustWindowRectEx(&rc, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 
 		// I have zero idea how it works, really. I don't understand how these calculations make it work.
 		coord += rc.left;
@@ -165,7 +165,7 @@ LIBMULTI_DOUBLE libmulti_set_width(double index, double w) {
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 
 		RECT empty; SetRectEmpty(&empty);
-		AdjustWindowRectEx(&empty, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		AdjustWindowRectEx(&empty, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		RECT rwindow;
 		GetWindowRect(window, &rwindow);
 
@@ -184,7 +184,7 @@ LIBMULTI_DOUBLE libmulti_set_height(double index, double h) {
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 
 		RECT empty; SetRectEmpty(&empty);
-		AdjustWindowRectEx(&empty, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		AdjustWindowRectEx(&empty, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		RECT rwindow;
 		GetWindowRect(window, &rwindow);
 
@@ -205,7 +205,7 @@ LIBMULTI_DOUBLE libmulti_set_size(double index, double w, double h) {
 
 		RECT rc;
 		SetRectEmpty(&rc);
-		AdjustWindowRectEx(&rc, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		AdjustWindowRectEx(&rc, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		
 		// I have zero idea how it works, really.
 		coord += rc.right - rc.left;
@@ -231,7 +231,7 @@ LIBMULTI_DOUBLE libmulti_set_rectangle(double index, double x, double y, double 
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 		RECT rc{ ix,iy,iw,ih };
 		RECT empty; SetRectEmpty(&empty);
-		AdjustWindowRectEx(&empty, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		AdjustWindowRectEx(&empty, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		ok = SetWindowPos(window, HWND_TOP, rc.left + empty.left, rc.top + empty.top, rc.right + empty.right - empty.left, rc.bottom + empty.bottom - empty.top, SWP_NOZORDER);
 		LastError = GetLastError();
 		LeaveVector();
@@ -248,7 +248,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_left(double index) {
 		EnterVector();
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 		RECT rc;
-		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		if (ok == TRUE) v = rc.left;
 		LeaveVector();
 		return v;
@@ -263,7 +263,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_top(double index) {
 		EnterVector();
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 		RECT rc;
-		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		if (ok == TRUE) v = rc.top;
 		LeaveVector();
 		return v;
@@ -278,7 +278,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_right(double index) {
 		EnterVector();
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 		RECT rc;
-		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		if (ok == TRUE) v = rc.right;
 		LeaveVector();
 		return v;
@@ -293,7 +293,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_bottom(double index) {
 		EnterVector();
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
 		RECT rc;
-		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, GetWindowLongPtrW(window, GWL_STYLE), GetMenu(window) != nullptr, GetWindowLongPtrW(window, GWL_EXSTYLE));
+		ok = SetRectEmpty(&rc) && AdjustWindowRectEx(&rc, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_STYLE)), GetMenu(window) != nullptr, static_cast<DWORD>(GetWindowLongPtrW(window, GWL_EXSTYLE)));
 		if (ok == TRUE) v = rc.bottom;
 		LeaveVector();
 		return v;
