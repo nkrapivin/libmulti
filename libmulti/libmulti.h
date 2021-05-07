@@ -29,10 +29,12 @@ extern std::vector<std::pair<HWND, CMultiD2D*>> vecWindows;
 bool _libmulti_exists(double index);
 DWORD WINAPI libmulti_window_thread(LPVOID lpThreadParameter);
 ATOM register_window_class(WNDPROC p);
+BOOL unregister_window_class(ATOM c, HINSTANCE hi);
 
 
 LIBMULTI_VOID   RegisterCallbacks(char* p1, char* p2, char* p3, char* p4);
 LIBMULTI_DOUBLE libmulti_init(void);
+LIBMULTI_DOUBLE libmulti_quit(void);
 LIBMULTI_DOUBLE libmulti_present(void);
 LIBMULTI_DOUBLE libmulti_exists(double index);
 LIBMULTI_DOUBLE libmulti_last_error_code(void);

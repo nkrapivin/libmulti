@@ -3,6 +3,10 @@
 #include "stdafx.h"
 #include "libmulti.h"
 
+BOOL unregister_window_class(ATOM c, HINSTANCE hi) {
+	return UnregisterClass(reinterpret_cast<LPCTSTR>(c), hi);
+}
+
 ATOM register_window_class(WNDPROC p) {
 	WNDCLASSEX wnd;
 	wnd.cbSize = sizeof(wnd);

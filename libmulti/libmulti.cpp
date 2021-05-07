@@ -9,10 +9,10 @@ static ATOM nikWindowClass{ 0 };
 std::vector<std::pair<HWND, CMultiD2D*>> vecWindows{ };
 DWORD LastError{ ERROR_SUCCESS };
 static char* LastString{ nullptr };
-static CRITICAL_SECTION Mutex{ 0 };
+static CRITICAL_SECTION* Mutex{ nullptr };
 
-void EnterVector(void) { EnterCriticalSection(&Mutex); }
-void LeaveVector(void) { LeaveCriticalSection(&Mutex); }
+void EnterVector(void) { EnterCriticalSection(Mutex); }
+void LeaveVector(void) { LeaveCriticalSection(Mutex); }
 
 bool _libmulti_exists(double index) {
 	bool ret = true;
@@ -382,13 +382,28 @@ LIBMULTI_VOID RegisterCallbacks(char* p1, char* p2, char* p3, char* p4) {
 LIBMULTI_DOUBLE libmulti_init(void) {
 	printf(__FUNCTION__ ": hello!\n");
 	fflush(stdout);
-	InitializeCriticalSection(&Mutex);
+	Mutex = new CRITICAL_SECTION();
+	InitializeCriticalSection(Mutex);
 	InitMultiD2D();
 	EnterVector();
 	nikWindowClass = register_window_class(WindowProc);
 	LeaveVector();
 
 	return nikWindowClass;
+}
+
+LIBMULTI_DOUBLE libmulti_quit(void) {
+	if (Mutex == nullptr) return -1.0;
+	EnterVector();
+	for (const auto& pair : vecWindows) {
+		DestroyWindow(pair.first);
+	}
+	BOOL ok = unregister_window_class(nikWindowClass, hModule);
+	LastError = GetLastError();
+	LeaveVector();
+	DeleteCriticalSection(Mutex);
+	Mutex = nullptr;
+	return ok;
 }
 
 LIBMULTI_STRING libmulti_last_error_message(void) {
