@@ -148,6 +148,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <Text Include="legacy_extmaker_def.txt" />
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -161,8 +162,10 @@
     <ClCompile Include="libmulti.cpp" />
     <ClCompile Include="libmulti_dllmain.cpp" />
     <ClCompile Include="libmulti_focus.cpp" />
+    <ClCompile Include="libmulti_legacy.cpp" />
     <ClCompile Include="libmulti_misc.cpp" />
     <ClCompile Include="libmulti_pos.cpp" />
+    <ClCompile Include="libmulti_style.cpp" />
     <ClCompile Include="libmulti_thread.cpp" />
     <ClCompile Include="libmulti_wndclass.cpp" />
     <ClCompile Include="MultiD2D.cpp" />

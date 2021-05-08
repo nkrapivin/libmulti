@@ -1,10 +1,12 @@
 #include "stdafx.h"
 #include "MultiD2D.h"
+#include <wincodec.h>
 
 #define SafeRelease(_Interface) if (*(_Interface) != nullptr) { (*(_Interface))->Release(); (*(_Interface)) = nullptr; }
 
 CRITICAL_SECTION ms_FactoryMutex{ 0 };
 ID2D1Factory* ms_Factory{ nullptr };
+IWICImagingFactory* ms_IWICFactory{ nullptr };
 
 void EnterFactory(void) { EnterCriticalSection(&ms_FactoryMutex); }
 void LeaveFactory(void) { LeaveCriticalSection(&ms_FactoryMutex); }
@@ -13,6 +15,7 @@ void InitMultiD2D(void) {
 	InitializeCriticalSection(&ms_FactoryMutex);
 	EnterFactory();
 	D2D1CreateFactory(D2D1_FACTORY_TYPE::D2D1_FACTORY_TYPE_MULTI_THREADED, &ms_Factory);
+	CoCreateInstance(CLSID_WICImagingFactory, nullptr, CLSCTX_INPROC_SERVER, IID_PPV_ARGS(&ms_IWICFactory));
 	LeaveFactory();
 
 	printf(__FUNCTION__ ": hello!\n");
@@ -27,6 +30,10 @@ CMultiD2D::~CMultiD2D() {
 	this->Discard();
 
 	this->enter();
+	if (this->m_bitmapW == 0 && this->m_bitmapH == 0 && this->m_bitmapP != nullptr) {
+		// could be an HBITMAP...
+		DeleteObject(this->m_bitmapP);
+	}
 	this->m_bitmapP = nullptr;
 	this->m_bitmapW = 0;
 	this->m_bitmapH = 0;
@@ -63,14 +70,21 @@ HRESULT CMultiD2D::Create(HWND window) {
 	ms_Factory->GetDesktopDpi(&dpiX, &dpiY);
 	LeaveFactory();
 
-	if (SUCCEEDED(hR) && this->m_bitmapP != nullptr && this->m_bitmap == nullptr) {
-		D2D1_SIZE_U bmsize = D2D1::SizeU(this->m_bitmapW, this->m_bitmapH);
-		D2D1_BITMAP_PROPERTIES props;
-		props.dpiX = dpiX;
-		props.dpiY = dpiY;
-		props.pixelFormat.alphaMode = D2D1_ALPHA_MODE::D2D1_ALPHA_MODE_IGNORE;
-		props.pixelFormat.format = DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
-		hR = this->m_rt->CreateBitmap(bmsize, this->m_bitmapP, this->m_bitmapW * 4, props, &this->m_bitmap);
+	if (SUCCEEDED(hR) && this->m_rt != nullptr && this->m_bitmap == nullptr && this->m_bitmapP != nullptr) {
+		// in-memory bitmap
+		if (this->m_bitmapW != 0 && this->m_bitmapH != 0) {
+			D2D1_SIZE_U bmsize = D2D1::SizeU(this->m_bitmapW, this->m_bitmapH);
+			D2D1_BITMAP_PROPERTIES props;
+			props.dpiX = dpiX;
+			props.dpiY = dpiY;
+			props.pixelFormat.alphaMode = D2D1_ALPHA_MODE::D2D1_ALPHA_MODE_PREMULTIPLIED;
+			props.pixelFormat.format = DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
+			hR = this->m_rt->CreateBitmap(bmsize, this->m_bitmapP, this->m_bitmapW * 4, props, &this->m_bitmap);
+		}
+		else {
+			// on-disk bitmap
+			hR = this->createfromfile();
+		}
 	}
 
 	this->leave();
@@ -137,4 +151,43 @@ HRESULT CMultiD2D::SetBitmap(UINT w, UINT h, void* data) {
 	this->leave();
 	this->Discard();
 	return S_OK;
+}
+
+HRESULT CMultiD2D::createfromfile(void) {
+	IWICBitmap* pBitmap = nullptr;
+	HRESULT hr = S_OK;
+
+	hr = ms_IWICFactory->CreateBitmapFromHBITMAP(
+		static_cast<HBITMAP>(this->m_bitmapP),
+		nullptr,
+		WICBitmapAlphaChannelOption::WICBitmapIgnoreAlpha,
+		&pBitmap
+	);
+
+	if (SUCCEEDED(hr)) {
+		hr = this->m_rt->CreateBitmapFromWicBitmap(pBitmap, &this->m_bitmap);
+	}
+
+	SafeRelease(&pBitmap);
+
+	return hr;
+}
+
+void CMultiD2D::SetBitmapFromFile(LPCWSTR filename) {
+	this->enter();
+
+	if (this->m_bitmapW == 0 && this->m_bitmapH == 0) {
+		if (this->m_bitmapP != nullptr) {
+			DeleteObject(this->m_bitmapP);
+			this->m_bitmapP = nullptr;
+		}
+
+		HANDLE hBitmap = LoadImageW(nullptr, filename, IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);
+		if (hBitmap) {
+			this->m_bitmapP = hBitmap;
+		}
+	}
+
+	this->leave();
+	this->Discard();
 }

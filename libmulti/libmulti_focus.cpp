@@ -13,6 +13,14 @@ LIBMULTI_DOUBLE libmulti_set_game_window(char* hwnd) {
 	return MainGameWindow != old;
 }
 
+LIBMULTI_DOUBLE libmulti_set_game_window_real(double hwnd) {
+	EnterVector();
+	HWND old = MainGameWindow;
+	MainGameWindow = reinterpret_cast<HWND>(static_cast<LONG_PTR>(hwnd));
+	LeaveVector();
+	return MainGameWindow != old;
+}
+
 LIBMULTI_DOUBLE libmulti_get_active_window(void) {
 	double ret = -2.0; // -2 - active window is not a window that we're aware of.
 

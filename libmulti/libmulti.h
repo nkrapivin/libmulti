@@ -31,7 +31,6 @@ DWORD WINAPI libmulti_window_thread(LPVOID lpThreadParameter);
 ATOM register_window_class(WNDPROC p);
 BOOL unregister_window_class(ATOM c, HINSTANCE hi);
 
-
 LIBMULTI_VOID   RegisterCallbacks(char* p1, char* p2, char* p3, char* p4);
 LIBMULTI_DOUBLE libmulti_init(void);
 LIBMULTI_DOUBLE libmulti_quit(void);
@@ -41,18 +40,16 @@ LIBMULTI_DOUBLE libmulti_last_error_code(void);
 LIBMULTI_STRING libmulti_last_error_message(void);
 LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _h, double _style, double _exstyle, double _show, double _minw, double _minh, double _maxw, double _maxh);
 LIBMULTI_DOUBLE libmulti_destroy(double index);
-
 LIBMULTI_DOUBLE libmulti_set_caption(double index, char* _name);
 LIBMULTI_DOUBLE libmulti_make_bitmap(double index, double width, double height, char* _buf);
-
+LIBMULTI_DOUBLE libmulti_make_bitmap_from_file(double index, char* _fileName);
 LIBMULTI_DOUBLE libmulti_set_game_window(char* hwnd);
+LIBMULTI_DOUBLE libmulti_set_game_window_real(double hwnd);
 LIBMULTI_DOUBLE libmulti_set_active_window(double index);
 LIBMULTI_DOUBLE libmulti_set_foreground_window(double index);
 LIBMULTI_DOUBLE libmulti_has_focus(double index);
-
 LIBMULTI_DOUBLE libmulti_get_active_window(void);
 LIBMULTI_DOUBLE libmulti_get_foreground_window(void);
-
 LIBMULTI_DOUBLE libmulti_get_x(double index);
 LIBMULTI_DOUBLE libmulti_get_y(double index);
 LIBMULTI_DOUBLE libmulti_get_width(double index);
@@ -68,5 +65,25 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_left(double index);
 LIBMULTI_DOUBLE libmulti_get_nonclient_top(double index);
 LIBMULTI_DOUBLE libmulti_get_nonclient_right(double index);
 LIBMULTI_DOUBLE libmulti_get_nonclient_bottom(double index);
-
 LIBMULTI_STRING libmulti_get_caption(double index);
+LIBMULTI_DOUBLE libmulti_set_window_style(double index, double is_extended, double value);
+LIBMULTI_DOUBLE libmulti_get_window_style(double index, double is_extended);
+LIBMULTI_DOUBLE libmulti_set_min_width(double index, double width);
+LIBMULTI_DOUBLE libmulti_set_min_height(double index, double height);
+LIBMULTI_DOUBLE libmulti_set_max_width(double index, double width);
+LIBMULTI_DOUBLE libmulti_set_max_height(double index, double height);
+LIBMULTI_DOUBLE libmulti_set_min_size(double index, double width, double height);
+LIBMULTI_DOUBLE libmulti_set_max_size(double index, double width, double height);
+LIBMULTI_DOUBLE libmulti_get_min_width(double index);
+LIBMULTI_DOUBLE libmulti_get_min_height(double index);
+LIBMULTI_DOUBLE libmulti_get_max_width(double index);
+LIBMULTI_DOUBLE libmulti_get_max_height(double index);
+
+int libmulti_legacy_create_ds_map(int _num, ...);
+void libmulti_legacy_dispatch_stub(int ds_map, int event_index);
+
+LIBMULTI_DOUBLE libmulti_legacy_check(void);
+LIBMULTI_STRING libmulti_legacy_dispatch(void);
+
+void libmulti_legacy_mutex_init();
+void libmulti_legacy_mutex_quit();

@@ -12,6 +12,7 @@ DWORD WINAPI libmulti_window_thread(LPVOID lpThreadParameter) {
 	startup = nullptr;
 
 	// show the window and do all the window stuff on a separate thread...
+	IsGUIThread(TRUE);
 	ShowWindow(window, ncmdshow);
 	UpdateWindow(window);
 

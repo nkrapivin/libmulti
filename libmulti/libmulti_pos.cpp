@@ -300,3 +300,152 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_bottom(double index) {
 	}
 }
 
+LIBMULTI_DOUBLE libmulti_set_min_width(double index, double width) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		BOOL ok = FALSE;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) {
+			ok = TRUE;
+			userdata[1] = static_cast<intptr_t>(width);
+		}
+		LeaveVector();
+		return ok;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_set_min_height(double index, double height) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		BOOL ok = FALSE;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) {
+			ok = TRUE;
+			userdata[2] = static_cast<intptr_t>(height);
+		}
+		LeaveVector();
+		return ok;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_set_max_width(double index, double width) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		BOOL ok = FALSE;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) {
+			ok = TRUE;
+			userdata[3] = static_cast<intptr_t>(width);
+		}
+		LeaveVector();
+		return ok;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_set_max_height(double index, double height) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		BOOL ok = FALSE;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) {
+			ok = TRUE;
+			userdata[4] = static_cast<intptr_t>(height);
+		}
+		LeaveVector();
+		return ok;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_set_min_size(double index, double width, double height) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		BOOL ok = FALSE;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) {
+			ok = TRUE;
+			userdata[1] = static_cast<intptr_t>(width);
+			userdata[2] = static_cast<intptr_t>(height);
+		}
+		LeaveVector();
+		return ok;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_set_max_size(double index, double width, double height) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		BOOL ok = FALSE;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) {
+			ok = TRUE;
+			userdata[3] = static_cast<intptr_t>(width);
+			userdata[4] = static_cast<intptr_t>(height);
+		}
+		LeaveVector();
+		return ok;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_get_min_width(double index) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		double ret = -1.0;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) ret = static_cast<double>(userdata[1]);
+		LeaveVector();
+		return ret;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_get_min_height(double index) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		double ret = -1.0;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) ret = static_cast<double>(userdata[2]);
+		LeaveVector();
+		return ret;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_get_max_width(double index) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		double ret = -1.0;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) ret = static_cast<double>(userdata[3]);
+		LeaveVector();
+		return ret;
+	}
+}
+
+LIBMULTI_DOUBLE libmulti_get_max_height(double index) {
+	if (!_libmulti_exists(index)) return -1.0;
+	else {
+		double ret = -1.0;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) ret = static_cast<double>(userdata[4]);
+		LeaveVector();
+		return ret;
+	}
+}

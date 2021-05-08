@@ -18,6 +18,7 @@ private:
 	// mutex stuff
 	void enter(void);
 	void leave(void);
+	HRESULT createfromfile(void);
 public:
 
 	CMultiD2D();
@@ -28,4 +29,5 @@ public:
 	HRESULT OnResize(UINT w, UINT h);
 	HRESULT OnRender(void);
 	HRESULT SetBitmap(UINT w, UINT h, void* data);
+	void SetBitmapFromFile(LPCWSTR filename);
 };

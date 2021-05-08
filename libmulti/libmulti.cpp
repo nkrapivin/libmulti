@@ -337,26 +337,26 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 			auto exstyles = GetWindowLongPtrW(hWnd, GWL_EXSTYLE);
 			RECT rc;
 
-			if (minW > 0 && minH > 0) {
+			if (minW > 0 || minH > 0) {
 				SetRectEmpty(&rc);
 				rc.right = static_cast<LONG>(minW); rc.bottom = static_cast<LONG>(minH);
 				AdjustWindowRectEx(&rc, static_cast<DWORD>(styles), GetMenu(hWnd) != nullptr, static_cast<DWORD>(exstyles));
 				rc.right -= rc.left;
 				rc.bottom -= rc.top;
 
-				maxinfo->ptMinTrackSize.x = rc.right;
-				maxinfo->ptMinTrackSize.y = rc.bottom;
+				if (minW > 0) maxinfo->ptMinTrackSize.x = rc.right;
+				if (minH > 0) maxinfo->ptMinTrackSize.y = rc.bottom;
 			}
 
-			if (maxW > 0 && maxH > 0) {
+			if (maxW > 0 || maxH > 0) {
 				SetRectEmpty(&rc);
 				rc.right = static_cast<LONG>(maxW); rc.bottom = static_cast<LONG>(maxH);
 				AdjustWindowRectEx(&rc, static_cast<DWORD>(styles), GetMenu(hWnd) != nullptr, static_cast<DWORD>(exstyles));
 				rc.right -= rc.left;
 				rc.bottom -= rc.top;
 
-				maxinfo->ptMaxTrackSize.x = rc.right;
-				maxinfo->ptMaxTrackSize.y = rc.bottom;
+				if (maxW > 0) maxinfo->ptMaxTrackSize.x = rc.right;
+				if (maxH > 0) maxinfo->ptMaxTrackSize.y = rc.bottom;
 			}
 
 			break;
@@ -389,6 +389,15 @@ LIBMULTI_DOUBLE libmulti_init(void) {
 	nikWindowClass = register_window_class(WindowProc);
 	LeaveVector();
 
+	// RegisterCallbacks wasn't called? Are we in legacy GM?
+	if (CBCreateDsMap == nullptr) {
+		CBCreateDsMap = libmulti_legacy_create_ds_map;
+		CBDispatch = libmulti_legacy_dispatch_stub;
+		// initialize a custom event system
+		libmulti_legacy_mutex_init();
+		// overmars why
+	}
+
 	return nikWindowClass;
 }
 
@@ -403,6 +412,7 @@ LIBMULTI_DOUBLE libmulti_quit(void) {
 	LeaveVector();
 	DeleteCriticalSection(Mutex);
 	Mutex = nullptr;
+	libmulti_legacy_mutex_quit();
 	return ok;
 }
 
