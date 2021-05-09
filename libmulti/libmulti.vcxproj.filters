@@ -78,4 +78,9 @@
       <Filter>Файлы ресурсов</Filter>
     </ResourceCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="postbuild.bat">
+      <Filter>Файлы исходного кода</Filter>
+    </None>
+  </ItemGroup>
 </Project>
