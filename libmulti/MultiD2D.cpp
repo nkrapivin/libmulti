@@ -2,16 +2,24 @@
 #include "MultiD2D.h"
 #include <wincodec.h>
 
-#define SafeRelease(_Interface) if (*(_Interface) != nullptr) { (*(_Interface))->Release(); (*(_Interface)) = nullptr; }
+template<class T> inline ULONG SafeRelease(T** _ppInterface) {
+	if ((*_ppInterface) != nullptr) {
+		auto ret = (*_ppInterface)->Release();
+		(*_ppInterface) = nullptr;
+		return ret;
+	}
+
+	return 0;
+}
 
 CRITICAL_SECTION ms_FactoryMutex{ 0 };
 ID2D1Factory* ms_Factory{ nullptr };
 IWICImagingFactory* ms_IWICFactory{ nullptr };
 
-void EnterFactory(void) { EnterCriticalSection(&ms_FactoryMutex); }
-void LeaveFactory(void) { LeaveCriticalSection(&ms_FactoryMutex); }
+void EnterFactory() { EnterCriticalSection(&ms_FactoryMutex); }
+void LeaveFactory() { LeaveCriticalSection(&ms_FactoryMutex); }
 
-void InitMultiD2D(void) {
+void InitMultiD2D() {
 	InitializeCriticalSection(&ms_FactoryMutex);
 	EnterFactory();
 	D2D1CreateFactory(D2D1_FACTORY_TYPE::D2D1_FACTORY_TYPE_MULTI_THREADED, &ms_Factory);
@@ -44,10 +52,10 @@ CMultiD2D::~CMultiD2D() {
 	this->m_mutex = nullptr;
 }
 
-void CMultiD2D::enter(void) { EnterCriticalSection(this->m_mutex); }
-void CMultiD2D::leave(void) { LeaveCriticalSection(this->m_mutex); }
+void CMultiD2D::enter() { EnterCriticalSection(this->m_mutex); }
+void CMultiD2D::leave() { LeaveCriticalSection(this->m_mutex); }
 
-void CMultiD2D::Discard(void) {
+void CMultiD2D::Discard() {
 	this->enter();
 	SafeRelease(&this->m_bitmap);
 	SafeRelease(&this->m_rt);
@@ -106,7 +114,7 @@ HRESULT CMultiD2D::OnResize(UINT w, UINT h) {
 	return hR;
 }
 
-HRESULT CMultiD2D::OnRender(void) {
+HRESULT CMultiD2D::OnRender() {
 	HRESULT hR = S_OK;
 	this->enter();
 
@@ -153,16 +161,18 @@ HRESULT CMultiD2D::SetBitmap(UINT w, UINT h, void* data) {
 	return S_OK;
 }
 
-HRESULT CMultiD2D::createfromfile(void) {
+HRESULT CMultiD2D::createfromfile() {
 	IWICBitmap* pBitmap = nullptr;
 	HRESULT hr = S_OK;
 
+	EnterFactory();
 	hr = ms_IWICFactory->CreateBitmapFromHBITMAP(
 		static_cast<HBITMAP>(this->m_bitmapP),
 		nullptr,
 		WICBitmapAlphaChannelOption::WICBitmapIgnoreAlpha,
 		&pBitmap
 	);
+	LeaveFactory();
 
 	if (SUCCEEDED(hr)) {
 		hr = this->m_rt->CreateBitmapFromWicBitmap(pBitmap, &this->m_bitmap);

@@ -45,3 +45,5 @@ function libmulti_get_max_width(index:real):real
 function libmulti_get_max_height(index:real):real
 function libmulti_legacy_check():real
 function libmulti_legacy_dispatch():string
+function libmulti_mouse_get_x(index:real):real
+function libmulti_mouse_get_y(index:real):real

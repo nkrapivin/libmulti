@@ -1,89 +1,130 @@
-// Приведенный ниже блок ifdef - это стандартный метод создания макросов, упрощающий процедуру 
-// экспорта из библиотек DLL. Все файлы данной DLL скомпилированы с использованием символа LIBMULTI_EXPORTS,
-// в командной строке. Этот символ не должен быть определен в каком-либо проекте
-// использующем данную DLL. Благодаря этому любой другой проект, чьи исходные файлы включают данный файл, видит 
-// функции LIBMULTI_API как импортированные из DLL, тогда как данная DLL видит символы,
-// определяемые данным макросом, как экспортированные.
+// libmulti.h: Main header file for libmulti.
 #include "stdafx.h"
 #include "MultiD2D.h"
-#ifdef LIBMULTI_EXPORTS
-#define LIBMULTI_API __declspec(dllexport)
-#else
-#define LIBMULTI_API __declspec(dllimport)
-#endif
+#include "gmcallback.h"
 
-#define LIBMULTI_VOID   EXTERN_C LIBMULTI_API void        CDECL 
-#define LIBMULTI_DOUBLE EXTERN_C LIBMULTI_API double      CDECL 
-#define LIBMULTI_STRING EXTERN_C LIBMULTI_API const char* CDECL 
-
-typedef void(*CBDispatch_t)(int dsmap_index, int event_subtype);
-typedef int(*CBCreateDsMap_t)(int num, ...);
-typedef bool(*CBDsMapAddReal_t)(int dsmap_index, const char* pKey, double value);
-typedef bool(*CBDsMapAddString_t)(int dsmap_index, const char* pKey, const char* pValue);
-
-void EnterVector(void);
-void LeaveVector(void);
+// internal libmulti stuff.
+void EnterVector();
+void LeaveVector();
 extern HMODULE hModule;
 extern DWORD LastError;
 extern std::vector<std::pair<HWND, CMultiD2D*>> vecWindows;
-bool _libmulti_exists(double index);
+bool _libmulti_exists(double window);
 DWORD WINAPI libmulti_window_thread(LPVOID lpThreadParameter);
 ATOM register_window_class(WNDPROC p);
 BOOL unregister_window_class(ATOM c, HINSTANCE hi);
-
-LIBMULTI_VOID   RegisterCallbacks(char* p1, char* p2, char* p3, char* p4);
-LIBMULTI_DOUBLE libmulti_init(void);
-LIBMULTI_DOUBLE libmulti_quit(void);
-LIBMULTI_DOUBLE libmulti_present(void);
-LIBMULTI_DOUBLE libmulti_exists(double index);
-LIBMULTI_DOUBLE libmulti_last_error_code(void);
-LIBMULTI_STRING libmulti_last_error_message(void);
-LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _h, double _style, double _exstyle, double _show, double _minw, double _minh, double _maxw, double _maxh);
-LIBMULTI_DOUBLE libmulti_destroy(double index);
-LIBMULTI_DOUBLE libmulti_set_caption(double index, char* _name);
-LIBMULTI_DOUBLE libmulti_make_bitmap(double index, double width, double height, char* _buf);
-LIBMULTI_DOUBLE libmulti_make_bitmap_from_file(double index, char* _fileName);
-LIBMULTI_DOUBLE libmulti_set_game_window(char* hwnd);
-LIBMULTI_DOUBLE libmulti_set_game_window_real(double hwnd);
-LIBMULTI_DOUBLE libmulti_set_active_window(double index);
-LIBMULTI_DOUBLE libmulti_set_foreground_window(double index);
-LIBMULTI_DOUBLE libmulti_has_focus(double index);
-LIBMULTI_DOUBLE libmulti_get_active_window(void);
-LIBMULTI_DOUBLE libmulti_get_foreground_window(void);
-LIBMULTI_DOUBLE libmulti_get_x(double index);
-LIBMULTI_DOUBLE libmulti_get_y(double index);
-LIBMULTI_DOUBLE libmulti_get_width(double index);
-LIBMULTI_DOUBLE libmulti_get_height(double index);
-LIBMULTI_DOUBLE libmulti_set_x(double index, double x);
-LIBMULTI_DOUBLE libmulti_set_y(double index, double y);
-LIBMULTI_DOUBLE libmulti_set_width(double index, double w);
-LIBMULTI_DOUBLE libmulti_set_height(double index, double h);
-LIBMULTI_DOUBLE libmulti_set_position(double index, double x, double y);
-LIBMULTI_DOUBLE libmulti_set_size(double index, double w, double h);
-LIBMULTI_DOUBLE libmulti_set_rectangle(double index, double x, double y, double w, double h);
-LIBMULTI_DOUBLE libmulti_get_nonclient_left(double index);
-LIBMULTI_DOUBLE libmulti_get_nonclient_top(double index);
-LIBMULTI_DOUBLE libmulti_get_nonclient_right(double index);
-LIBMULTI_DOUBLE libmulti_get_nonclient_bottom(double index);
-LIBMULTI_STRING libmulti_get_caption(double index);
-LIBMULTI_DOUBLE libmulti_set_window_style(double index, double is_extended, double value);
-LIBMULTI_DOUBLE libmulti_get_window_style(double index, double is_extended);
-LIBMULTI_DOUBLE libmulti_set_min_width(double index, double width);
-LIBMULTI_DOUBLE libmulti_set_min_height(double index, double height);
-LIBMULTI_DOUBLE libmulti_set_max_width(double index, double width);
-LIBMULTI_DOUBLE libmulti_set_max_height(double index, double height);
-LIBMULTI_DOUBLE libmulti_set_min_size(double index, double width, double height);
-LIBMULTI_DOUBLE libmulti_set_max_size(double index, double width, double height);
-LIBMULTI_DOUBLE libmulti_get_min_width(double index);
-LIBMULTI_DOUBLE libmulti_get_min_height(double index);
-LIBMULTI_DOUBLE libmulti_get_max_width(double index);
-LIBMULTI_DOUBLE libmulti_get_max_height(double index);
-
 int libmulti_legacy_create_ds_map(int _num, ...);
 void libmulti_legacy_dispatch_stub(int ds_map, int event_index);
-
-LIBMULTI_DOUBLE libmulti_legacy_check(void);
-LIBMULTI_STRING libmulti_legacy_dispatch(void);
-
 void libmulti_legacy_mutex_init();
 void libmulti_legacy_mutex_quit();
+
+
+/*
+@ // ignore this, it's here just for reference.
+@ void RegisterCallbacks(char* p1, char* p2, char* p3, char* p4);
+@ /// (Dont,Use) : LEGACY GM ONLY, DO NOT USE!
+@ double libmulti_make_bitmap_from_file(double window, char* _fileName);
+@ /// (DoNotUse) : LEGACY GM ONLY, DO NOT USE!
+@ double libmulti_set_game_window_real(double hwnd);
+@ /// () : LEGACY GM ONLY, DO NOT USE!
+@ double libmulti_legacy_check();
+@ /// () : LEGACY GM ONLY, DO NOT USE!
+@ const char* libmulti_legacy_dispatch();
+*/
+
+/* GmxGen stuff below, change as needed: */
+#define dllx extern "C" __declspec(dllexport)
+
+///->real : Initializes the library.
+dllx double libmulti_init();
+///->real : Destroys all windows and frees the library resources.
+dllx double libmulti_quit();
+///->real : Returns true if the DLL is present and was loaded.
+dllx double libmulti_present();
+///->real : Checks if a window index is valid and the window exists.
+dllx double libmulti_exists(double window);
+///->real : Returns the last WinAPI error code.
+dllx double libmulti_last_error_code();
+///->string : Tries to turn the last WinAPI error code into a string.
+dllx char* libmulti_last_error_message();
+///->real : Creates a new window.
+dllx double libmulti_create_window(double x, double y, double width, double height, double style, double ex_style, double sw_show, double min_width, double min_height, double max_width, double max_height);
+///->real : Destroys a window.
+dllx double libmulti_destroy(double window);
+///->real : Sets the window caption.
+dllx double libmulti_set_caption(double window, char* caption);
+///->real : Draws a surface buffer inside the window.
+dllx double libmulti_make_bitmap(double window, double width, double height, char* buffer_ADDRESS);
+///->real : Tells the extension which window is managed by GM.
+dllx double libmulti_set_game_window(char* window_handle_result);
+///->real : Sets the passed window as active.
+dllx double libmulti_set_active_window(double window);
+///->real : Sets the passed window as foreground.
+dllx double libmulti_set_foreground_window(double window);
+///->real : Checks if the passed window is in focus or not.
+dllx double libmulti_has_focus(double window);
+///->real : Gets the index of the current active window.
+dllx double libmulti_get_active_window();
+///->real : Gets the index of the current foreground window.
+dllx double libmulti_get_foreground_window();
+///->real : Gets the X coord of the client area of the window.
+dllx double libmulti_get_x(double window);
+///->real : Gets the Y coord of the client area of the window.
+dllx double libmulti_get_y(double window);
+///->real : Gets the width of the client area of the window.
+dllx double libmulti_get_width(double window);
+///->real : Gets the height of the client area of the window.
+dllx double libmulti_get_height(double window);
+///->real : Sets the X position of the client area of the window.
+dllx double libmulti_set_x(double window, double new_x);
+///->real : Sets the Y position of the client area of the window.
+dllx double libmulti_set_y(double window, double new_y);
+///->real : Sets the width of the client area of the window.
+dllx double libmulti_set_width(double window, double new_width);
+///->real : Sets the height of the client area of the window.
+dllx double libmulti_set_height(double window, double new_height);
+///->real : Sets the position of the client area of the window.
+dllx double libmulti_set_position(double window, double x, double y);
+///->real : Sets the size of the client area of the window.
+dllx double libmulti_set_size(double window, double new_width, double new_height);
+///->real : Sets the window's client area rectangle.
+dllx double libmulti_set_rectangle(double window, double new_x, double new_y, double new_width, double new_height);
+///->real : Gets the left offset of the window's non-client area.
+dllx double libmulti_get_nonclient_left(double window);
+///->real : Gets the top offset of the window's non-client area.
+dllx double libmulti_get_nonclient_top(double window);
+///->real : Gets the right offset of the window's non-client area.
+dllx double libmulti_get_nonclient_right(double window);
+///->real : Gets the bottom offset of the window's non-client area.
+dllx double libmulti_get_nonclient_bottom(double window);
+///->string : Gets the window's caption.
+dllx char* libmulti_get_caption(double window);
+///->real : Sets the extended or window style.
+dllx double libmulti_set_window_style(double window, double is_extended, double style_value);
+///->real : Gets the window or the extended style.
+dllx double libmulti_get_window_style(double window, double is_extended);
+///->real : Sets the minimum allowed width of the window.
+dllx double libmulti_set_min_width(double window, double new_min_width);
+///->real : Sets the minimum allowed height of the window.
+dllx double libmulti_set_min_height(double window, double new_min_height);
+///->real : Sets the maximum allowed width of the window.
+dllx double libmulti_set_max_width(double window, double new_max_width);
+///->real : Sets the maximum allowed height of the window.
+dllx double libmulti_set_max_height(double window, double new_max_height);
+///->real : Sets the minimum allowed size of the window.
+dllx double libmulti_set_min_size(double window, double new_min_width, double new_min_height);
+///->real : Sets the maximum allowed size of the window.
+dllx double libmulti_set_max_size(double window, double new_max_width, double new_max_height);
+///->real : Gets the minimum allowed width of the window.
+dllx double libmulti_get_min_width(double window);
+///->real : Gets the minimum allowed height of the window.
+dllx double libmulti_get_min_height(double window);
+///->real : Gets the maximum allowed width of the window.
+dllx double libmulti_get_max_width(double window);
+///->real : Gets the maximum allowed height of the window.
+dllx double libmulti_get_max_height(double window);
+///->real : Gets the last X mouse coord relative to the window's client area.
+dllx double libmulti_mouse_get_x(double window);
+///->real : Gets the last Y mouse coord relative to the window's client area.
+dllx double libmulti_mouse_get_y(double window);
+// End.

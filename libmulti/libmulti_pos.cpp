@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "libmulti.h"
 
-LIBMULTI_DOUBLE libmulti_get_x(double index) {
+dllx double libmulti_get_x(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double coord = -1.0;
@@ -27,7 +27,7 @@ LIBMULTI_DOUBLE libmulti_get_x(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_y(double index) {
+dllx double libmulti_get_y(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double coord = -1.0;
@@ -51,7 +51,7 @@ LIBMULTI_DOUBLE libmulti_get_y(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_width(double index) {
+dllx double libmulti_get_width(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double coord = -1.0;
@@ -70,7 +70,7 @@ LIBMULTI_DOUBLE libmulti_get_width(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_height(double index) {
+dllx double libmulti_get_height(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double coord = -1.0;
@@ -89,7 +89,7 @@ LIBMULTI_DOUBLE libmulti_get_height(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_x(double index, double x) {
+dllx double libmulti_set_x(double index, double x) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		int coord = static_cast<int>(x);
@@ -110,7 +110,7 @@ LIBMULTI_DOUBLE libmulti_set_x(double index, double x) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_y(double index, double y) {
+dllx double libmulti_set_y(double index, double y) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		int coord = static_cast<int>(y);
@@ -131,7 +131,7 @@ LIBMULTI_DOUBLE libmulti_set_y(double index, double y) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_position(double index, double x, double y) {
+dllx double libmulti_set_position(double index, double x, double y) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		int coord = static_cast<int>(x);
@@ -156,7 +156,7 @@ LIBMULTI_DOUBLE libmulti_set_position(double index, double x, double y) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_width(double index, double w) {
+dllx double libmulti_set_width(double index, double w) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		int coord = static_cast<int>(w);
@@ -175,7 +175,7 @@ LIBMULTI_DOUBLE libmulti_set_width(double index, double w) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_height(double index, double h) {
+dllx double libmulti_set_height(double index, double h) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		int coord = static_cast<int>(h);
@@ -194,7 +194,7 @@ LIBMULTI_DOUBLE libmulti_set_height(double index, double h) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_size(double index, double w, double h) {
+dllx double libmulti_set_size(double index, double w, double h) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		int coord = static_cast<int>(w);
@@ -218,7 +218,7 @@ LIBMULTI_DOUBLE libmulti_set_size(double index, double w, double h) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_rectangle(double index, double x, double y, double w, double h) {
+dllx double libmulti_set_rectangle(double index, double x, double y, double w, double h) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		int ix = static_cast<int>(x),
@@ -240,7 +240,7 @@ LIBMULTI_DOUBLE libmulti_set_rectangle(double index, double x, double y, double 
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_nonclient_left(double index) {
+dllx double libmulti_get_nonclient_left(double index) {
 	if (!_libmulti_exists(index)) return 0.0;
 	else {
 		double v = 0.0;
@@ -255,7 +255,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_left(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_nonclient_top(double index) {
+dllx double libmulti_get_nonclient_top(double index) {
 	if (!_libmulti_exists(index)) return 0.0;
 	else {
 		double v = 0.0;
@@ -270,7 +270,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_top(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_nonclient_right(double index) {
+dllx double libmulti_get_nonclient_right(double index) {
 	if (!_libmulti_exists(index)) return 0.0;
 	else {
 		double v = 0.0;
@@ -285,7 +285,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_right(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_nonclient_bottom(double index) {
+dllx double libmulti_get_nonclient_bottom(double index) {
 	if (!_libmulti_exists(index)) return 0.0;
 	else {
 		double v = 0.0;
@@ -300,7 +300,7 @@ LIBMULTI_DOUBLE libmulti_get_nonclient_bottom(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_min_width(double index, double width) {
+dllx double libmulti_set_min_width(double index, double width) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ok = FALSE;
@@ -316,7 +316,7 @@ LIBMULTI_DOUBLE libmulti_set_min_width(double index, double width) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_min_height(double index, double height) {
+dllx double libmulti_set_min_height(double index, double height) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ok = FALSE;
@@ -332,7 +332,7 @@ LIBMULTI_DOUBLE libmulti_set_min_height(double index, double height) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_max_width(double index, double width) {
+dllx double libmulti_set_max_width(double index, double width) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ok = FALSE;
@@ -348,7 +348,7 @@ LIBMULTI_DOUBLE libmulti_set_max_width(double index, double width) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_max_height(double index, double height) {
+dllx double libmulti_set_max_height(double index, double height) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ok = FALSE;
@@ -364,7 +364,7 @@ LIBMULTI_DOUBLE libmulti_set_max_height(double index, double height) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_min_size(double index, double width, double height) {
+dllx double libmulti_set_min_size(double index, double width, double height) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ok = FALSE;
@@ -381,7 +381,7 @@ LIBMULTI_DOUBLE libmulti_set_min_size(double index, double width, double height)
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_max_size(double index, double width, double height) {
+dllx double libmulti_set_max_size(double index, double width, double height) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ok = FALSE;
@@ -398,7 +398,7 @@ LIBMULTI_DOUBLE libmulti_set_max_size(double index, double width, double height)
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_min_width(double index) {
+dllx double libmulti_get_min_width(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double ret = -1.0;
@@ -411,7 +411,7 @@ LIBMULTI_DOUBLE libmulti_get_min_width(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_min_height(double index) {
+dllx double libmulti_get_min_height(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double ret = -1.0;
@@ -424,7 +424,7 @@ LIBMULTI_DOUBLE libmulti_get_min_height(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_max_width(double index) {
+dllx double libmulti_get_max_width(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double ret = -1.0;
@@ -437,7 +437,7 @@ LIBMULTI_DOUBLE libmulti_get_max_width(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_max_height(double index) {
+dllx double libmulti_get_max_height(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		double ret = -1.0;
@@ -447,5 +447,31 @@ LIBMULTI_DOUBLE libmulti_get_max_height(double index) {
 		if (userdata != nullptr) ret = static_cast<double>(userdata[4]);
 		LeaveVector();
 		return ret;
+	}
+}
+
+dllx double libmulti_mouse_get_x(double index) {
+	if (!_libmulti_exists(index)) return 0.0;
+	else {
+		double coord = 0.0;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) coord = static_cast<double>(userdata[6]);
+		LeaveVector();
+		return coord;
+	}
+}
+
+dllx double libmulti_mouse_get_y(double index) {
+	if (!_libmulti_exists(index)) return 0.0;
+	else {
+		double coord = 0.0;
+		EnterVector();
+		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
+		intptr_t* userdata = reinterpret_cast<intptr_t*>(GetWindowLongPtrW(window, GWLP_USERDATA));
+		if (userdata != nullptr) coord = static_cast<double>(userdata[7]);
+		LeaveVector();
+		return coord;
 	}
 }

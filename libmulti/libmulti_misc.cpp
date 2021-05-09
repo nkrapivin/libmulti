@@ -3,14 +3,14 @@
 #include "stdafx.h"
 #include "libmulti.h"
 
-LIBMULTI_DOUBLE libmulti_last_error_code(void) {
+dllx double libmulti_last_error_code() {
 	return LastError;
 }
 
-LIBMULTI_DOUBLE libmulti_exists(double index) {
+dllx double libmulti_exists(double index) {
 	return _libmulti_exists(index);
 }
 
-LIBMULTI_DOUBLE libmulti_present(void) {
+dllx double libmulti_present() {
 	return 1.0;
 }

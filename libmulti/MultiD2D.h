@@ -1,7 +1,7 @@
 #pragma once
 #include "stdafx.h"
 
-void InitMultiD2D(void); // Initializes the factory, must be called once.
+void InitMultiD2D(); // Initializes the factory, must be called once.
 
 class CMultiD2D {
 private:
@@ -16,18 +16,18 @@ private:
 	void* m_bitmapP;
 
 	// mutex stuff
-	void enter(void);
-	void leave(void);
-	HRESULT createfromfile(void);
+	void enter();
+	void leave();
+	HRESULT createfromfile();
 public:
 
 	CMultiD2D();
 	~CMultiD2D();
 
-	void Discard(void); // Releases all resources EXCEPT for the user defined bitmap.
 	HRESULT Create(HWND window);
+	void Discard(); // Releases all resources EXCEPT for the user defined bitmap.
 	HRESULT OnResize(UINT w, UINT h);
-	HRESULT OnRender(void);
+	HRESULT OnRender();
 	HRESULT SetBitmap(UINT w, UINT h, void* data);
 	void SetBitmapFromFile(LPCWSTR filename);
 };

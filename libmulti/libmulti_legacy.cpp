@@ -53,7 +53,7 @@ int libmulti_legacy_create_ds_map(int _num, ...) {
 	ss << "return script_execute(argument0, __libmulti_async_load);" << std::endl;
 
 	EventQueue.push(ss.str());
-	int ind = EventQueue.size() - 1;
+	int ind = static_cast<int>(EventQueue.size()) - 1;
 
 	LeaveCriticalSection(LegacyMutex);
 
@@ -65,11 +65,11 @@ void libmulti_legacy_dispatch_stub(int ds_map, int event_index) {
 	// do nothing.
 }
 
-LIBMULTI_DOUBLE libmulti_legacy_check(void) {
+dllx double libmulti_legacy_check() {
 	return static_cast<double>(EventQueue.size());
 }
 
-LIBMULTI_STRING libmulti_legacy_dispatch(void) {
+dllx const char* libmulti_legacy_dispatch() {
 	if (!(EventQueue.empty())) {
 		std::string evstr{ EventQueue.front() };
 
@@ -95,7 +95,7 @@ LIBMULTI_STRING libmulti_legacy_dispatch(void) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_make_bitmap_from_file(double index, char* _fileName) {
+dllx double libmulti_make_bitmap_from_file(double index, char* _fileName) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		// empty string?

@@ -11,8 +11,8 @@ DWORD LastError{ ERROR_SUCCESS };
 static char* LastString{ nullptr };
 static CRITICAL_SECTION* Mutex{ nullptr };
 
-void EnterVector(void) { EnterCriticalSection(Mutex); }
-void LeaveVector(void) { LeaveCriticalSection(Mutex); }
+void EnterVector() { EnterCriticalSection(Mutex); }
+void LeaveVector() { LeaveCriticalSection(Mutex); }
 
 bool _libmulti_exists(double index) {
 	bool ret = true;
@@ -31,7 +31,7 @@ bool _libmulti_exists(double index) {
 	return ret;
 }
 
-static void _libmulti_free(void) {
+static void _libmulti_free() {
 	EnterVector();
 	if (LastString != nullptr) {
 		delete[] LastString;
@@ -44,9 +44,8 @@ CBDispatch_t CBDispatch{ nullptr };
 CBCreateDsMap_t CBCreateDsMap{ nullptr };
 CBDsMapAddReal_t CBDsMapAddReal{ nullptr };
 CBDsMapAddString_t CBDsMapAddString{ nullptr };
-const int EVENT_OTHER_SOCIAL{ 70 };
 
-static std::size_t _libmulti_find_free(void) {
+static std::size_t _libmulti_find_free() {
 	std::size_t ret = 0;
 
 	EnterVector();
@@ -292,12 +291,15 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 		}
 
 		case WM_MOUSEMOVE: {
+			int mouse_x = GET_X_LPARAM(lParam);
+			int mouse_y = GET_Y_LPARAM(lParam);
+
 			if (userdata[5]) {
 				userdata[5] = 0;
 				TrackMouseEvent(&tme);
 
-				double xpos = GET_X_LPARAM(lParam);
-				double ypos = GET_Y_LPARAM(lParam);
+				double xpos = mouse_x;
+				double ypos = mouse_y;
 				int async_load = CBCreateDsMap(4,
 					"event_type", zero, "libmulti_mouseenter",
 					"window", window, nullptr,
@@ -306,6 +308,10 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 				);
 				CBDispatch(async_load, EVENT_OTHER_SOCIAL);
 			}
+
+			userdata[6] = mouse_x;
+			userdata[7] = mouse_y;
+
 			break;
 		}
 
@@ -372,14 +378,14 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 	return ret;
 }
 
-LIBMULTI_VOID RegisterCallbacks(char* p1, char* p2, char* p3, char* p4) {
+dllx void RegisterCallbacks(char* p1, char* p2, char* p3, char* p4) {
 	CBDispatch = reinterpret_cast<CBDispatch_t>(p1);
 	CBCreateDsMap = reinterpret_cast<CBCreateDsMap_t>(p2);
 	CBDsMapAddReal = reinterpret_cast<CBDsMapAddReal_t>(p3);
 	CBDsMapAddString = reinterpret_cast<CBDsMapAddString_t>(p4);
 }
 
-LIBMULTI_DOUBLE libmulti_init(void) {
+dllx double libmulti_init() {
 	printf(__FUNCTION__ ": hello!\n");
 	fflush(stdout);
 	Mutex = new CRITICAL_SECTION();
@@ -401,14 +407,18 @@ LIBMULTI_DOUBLE libmulti_init(void) {
 	return nikWindowClass;
 }
 
-LIBMULTI_DOUBLE libmulti_quit(void) {
+dllx double libmulti_quit() {
 	if (Mutex == nullptr) return -1.0;
 	EnterVector();
 	for (const auto& pair : vecWindows) {
-		DestroyWindow(pair.first);
+		if (DestroyWindow(pair.first) == FALSE) {
+			LastError = GetLastError();
+		}
 	}
 	BOOL ok = unregister_window_class(nikWindowClass, hModule);
-	LastError = GetLastError();
+	if (ok == FALSE) {
+		LastError = GetLastError();
+	}
 	LeaveVector();
 	DeleteCriticalSection(Mutex);
 	Mutex = nullptr;
@@ -416,7 +426,7 @@ LIBMULTI_DOUBLE libmulti_quit(void) {
 	return ok;
 }
 
-LIBMULTI_STRING libmulti_last_error_message(void) {
+dllx char* libmulti_last_error_message() {
 	EnterVector();
 	DWORD myError = LastError;
 	LeaveVector();
@@ -451,7 +461,7 @@ LIBMULTI_STRING libmulti_last_error_message(void) {
 	return LastString;
 }
 
-LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _h, double _style, double _exstyle, double _show, double _minw, double _minh, double _maxw, double _maxh) {
+dllx double libmulti_create_window(double _x, double _y, double _w, double _h, double _style, double _exstyle, double _show, double _minw, double _minh, double _maxw, double _maxh) {
 	int X = static_cast<int>(_x), Y = static_cast<int>(_y), W = static_cast<int>(_w), H = static_cast<int>(_h), S = static_cast<int>(_show);
 	DWORD St = static_cast<DWORD>(_style);
 	DWORD ExSt = static_cast<DWORD>(_exstyle);
@@ -477,7 +487,7 @@ LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _
 		int diffY = ((Y == CW_USEDEFAULT) ? 0 : Y) - clientRc.top;
 		clientRc.right += diffX;
 		clientRc.bottom += diffY;
-		printf(__FUNCTION__ ": AdjustWindowRectEx ok?=%d\ndiffX=%d,diffY=%d", adjustok, diffX, diffY);
+		printf(__FUNCTION__ ": AdjustWindowRectEx ok?=%d\ndiffX=%d,diffY=%d\n", adjustok, diffX, diffY);
 		fflush(stdout);
 	}
 	if (X == CW_USEDEFAULT) clientRc.left = CW_USEDEFAULT;
@@ -502,7 +512,7 @@ LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _
 
 	std::pair<HWND, int>* startup = new std::pair<HWND, int>(window, S);
 	DWORD threadId = 0;
-	intptr_t* userdata = new intptr_t[7];
+	intptr_t* userdata = new intptr_t[8];
 	std::size_t ind = _libmulti_find_free();
 	userdata[0] = ind;
 	userdata[1] = minW;
@@ -510,7 +520,8 @@ LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _
 	userdata[3] = maxW;
 	userdata[4] = maxH;
 	userdata[5] = 0; // mouse hover flag
-	userdata[6] = 0; // extra
+	userdata[6] = 0; // last mouse x
+	userdata[7] = 0; // last mouse y
 	SetWindowLongPtrW(window, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(userdata));
 
 	EnterVector();
@@ -526,7 +537,7 @@ LIBMULTI_DOUBLE libmulti_create_window(double _x, double _y, double _w, double _
 	return static_cast<double>(ind);
 }
 
-LIBMULTI_DOUBLE libmulti_destroy(double index) {
+dllx double libmulti_destroy(double index) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ret = FALSE;
@@ -552,7 +563,7 @@ LIBMULTI_DOUBLE libmulti_destroy(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_set_caption(double index, char* _name) {
+dllx double libmulti_set_caption(double index, char* _name) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		BOOL ret = TRUE;
@@ -576,10 +587,10 @@ LIBMULTI_DOUBLE libmulti_set_caption(double index, char* _name) {
 	}
 }
 
-LIBMULTI_STRING libmulti_get_caption(double index) {
+dllx char* libmulti_get_caption(double index) {
 	if (!_libmulti_exists(index)) return u8"";
 	else {
-		const char* ret = u8"";
+		char* ret = u8"";
 		_libmulti_free();
 		EnterVector();
 		HWND window = vecWindows[static_cast<std::size_t>(index)].first;
@@ -606,7 +617,7 @@ LIBMULTI_STRING libmulti_get_caption(double index) {
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_make_bitmap(double index, double width, double height, char* _buf) {
+dllx double libmulti_make_bitmap(double index, double width, double height, char* _buf) {
 	if (!_libmulti_exists(index) || width < 0.0 || height < 0.0 || _buf == nullptr) return -1.0;
 	else {
 		BOOL ret = FALSE;

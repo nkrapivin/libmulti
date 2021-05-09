@@ -5,7 +5,7 @@
 
 static HWND MainGameWindow{ nullptr };
 
-LIBMULTI_DOUBLE libmulti_set_game_window(char* hwnd) {
+dllx double libmulti_set_game_window(char* hwnd) {
 	EnterVector();
 	HWND old = MainGameWindow;
 	MainGameWindow = reinterpret_cast<HWND>(hwnd);
@@ -13,7 +13,7 @@ LIBMULTI_DOUBLE libmulti_set_game_window(char* hwnd) {
 	return MainGameWindow != old;
 }
 
-LIBMULTI_DOUBLE libmulti_set_game_window_real(double hwnd) {
+dllx double libmulti_set_game_window_real(double hwnd) {
 	EnterVector();
 	HWND old = MainGameWindow;
 	MainGameWindow = reinterpret_cast<HWND>(static_cast<LONG_PTR>(hwnd));
@@ -21,7 +21,7 @@ LIBMULTI_DOUBLE libmulti_set_game_window_real(double hwnd) {
 	return MainGameWindow != old;
 }
 
-LIBMULTI_DOUBLE libmulti_get_active_window(void) {
+dllx double libmulti_get_active_window() {
 	double ret = -2.0; // -2 - active window is not a window that we're aware of.
 
 	EnterVector();
@@ -43,7 +43,7 @@ LIBMULTI_DOUBLE libmulti_get_active_window(void) {
 	return ret;
 }
 
-LIBMULTI_DOUBLE libmulti_get_foreground_window(void) {
+dllx double libmulti_get_foreground_window() {
 	double ret = -2.0; // -2 - active window is not a window that we're aware of.
 
 	EnterVector();
@@ -65,7 +65,7 @@ LIBMULTI_DOUBLE libmulti_get_foreground_window(void) {
 	return ret;
 }
 
-LIBMULTI_DOUBLE libmulti_set_active_window(double index) {
+dllx double libmulti_set_active_window(double index) {
 	if (index < 0.0) // anything below 0 means Game's window (not using any engine names here hehe)
 		SetActiveWindow(MainGameWindow);
 	else {
@@ -78,7 +78,7 @@ LIBMULTI_DOUBLE libmulti_set_active_window(double index) {
 	return 1.0;
 }
 
-LIBMULTI_DOUBLE libmulti_set_foreground_window(double index) {
+dllx double libmulti_set_foreground_window(double index) {
 	if (index < 0.0) // anything below 0 means Game's window (not using any engine names here hehe)
 		SetForegroundWindow(MainGameWindow);
 	else {
@@ -91,7 +91,7 @@ LIBMULTI_DOUBLE libmulti_set_foreground_window(double index) {
 	return 1.0;
 }
 
-LIBMULTI_DOUBLE libmulti_has_focus(double index) {
+dllx double libmulti_has_focus(double index) {
 	if (index < 0.0)
 		return MainGameWindow == GetForegroundWindow();
 	else {

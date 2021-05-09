@@ -3,7 +3,7 @@
 #include "stdafx.h"
 #include "libmulti.h"
 
-LIBMULTI_DOUBLE libmulti_set_window_style(double index, double is_extended, double value) {
+dllx double libmulti_set_window_style(double index, double is_extended, double value) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		EnterVector();
@@ -16,7 +16,7 @@ LIBMULTI_DOUBLE libmulti_set_window_style(double index, double is_extended, doub
 	}
 }
 
-LIBMULTI_DOUBLE libmulti_get_window_style(double index, double is_extended) {
+dllx double libmulti_get_window_style(double index, double is_extended) {
 	if (!_libmulti_exists(index)) return -1.0;
 	else {
 		EnterVector();
