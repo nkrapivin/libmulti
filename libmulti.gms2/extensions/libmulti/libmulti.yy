@@ -38,6 +38,24 @@
             "final": "",
             "functions": [
                 {
+                    "id": "c5041168-ecc6-30e1-002b-d4b72da3b6c9",
+                    "modelName": "GMExtensionFunction",
+                    "mvc": "1.0",
+                    "argCount": 4,
+                    "args": [
+                        1,
+                        1,
+                        1,
+                        1
+                    ],
+                    "externalName": "RegisterCallbacks",
+                    "help": "RegisterCallbacks(please, dont, call, it) : Do not call this function at all.",
+                    "hidden": false,
+                    "kind": 1,
+                    "name": "RegisterCallbacks",
+                    "returnType": 1
+                },
+                {
                     "id": "d5415e82-a8ba-05e7-e2b7-ca142935a78e",
                     "modelName": "GMExtensionFunction",
                     "mvc": "1.0",

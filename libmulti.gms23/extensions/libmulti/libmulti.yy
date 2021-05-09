@@ -17,6 +17,12 @@
   "installdir": "",
   "files": [
     {"filename":"libmulti.dll","origname":"","init":"","final":"","kind":1,"uncompress":false,"functions":[
+        {"externalName":"RegisterCallbacks","kind":1,"help":"RegisterCallbacks(please, dont, call, it) : Do not call this function at all.","hidden":false,"returnType":1,"argCount":4,"args":[
+            1,
+            1,
+            1,
+            1,
+          ],"resourceVersion":"1.0","name":"RegisterCallbacks","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_init","kind":1,"help":"libmulti_init() ->real  :  Initializes the library.","hidden":false,"returnType":2,"argCount":0,"args":[],"resourceVersion":"1.0","name":"libmulti_init","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_quit","kind":1,"help":"libmulti_quit() ->real  :  Destroys all windows and frees the library resources.","hidden":false,"returnType":2,"argCount":0,"args":[],"resourceVersion":"1.0","name":"libmulti_quit","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_present","kind":1,"help":"libmulti_present() ->real  :  Returns true if the DLL is present and was loaded.","hidden":false,"returnType":2,"argCount":0,"args":[],"resourceVersion":"1.0","name":"libmulti_present","tags":[],"resourceType":"GMExtensionFunction",},
@@ -183,6 +189,7 @@
       ],"ProxyFiles":[
         {"resourceType":"GMProxyFile","TargetMask":6,"name":"libmulti_x64.dll","tags":[],"resourceVersion":"1.0",},
       ],"copyToTargets":64,"order":[
+        {"name":"RegisterCallbacks","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_init","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_quit","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_present","path":"extensions/libmulti/libmulti.yy",},

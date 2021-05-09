@@ -46,6 +46,20 @@
       <ProxyFiles/>
       <functions>
         <function>
+          <name>RegisterCallbacks</name>
+          <externalName>RegisterCallbacks</externalName>
+          <kind>1</kind>
+          <help>RegisterCallbacks(please, dont, call, it) : Do not call this function at all.</help>
+          <returnType>1</returnType>
+          <argCount>4</argCount>
+          <args>
+            <arg>1</arg>
+            <arg>1</arg>
+            <arg>1</arg>
+            <arg>1</arg>
+          </args>
+        </function>
+        <function>
           <name>libmulti_init</name>
           <externalName>libmulti_init</externalName>
           <kind>1</kind>

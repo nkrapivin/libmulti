@@ -378,11 +378,12 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 	return ret;
 }
 
-dllx void RegisterCallbacks(char* p1, char* p2, char* p3, char* p4) {
+dllx char* RegisterCallbacks(char* p1, char* p2, char* p3, char* p4) {
 	CBDispatch = reinterpret_cast<CBDispatch_t>(p1);
 	CBCreateDsMap = reinterpret_cast<CBCreateDsMap_t>(p2);
 	CBDsMapAddReal = reinterpret_cast<CBDsMapAddReal_t>(p3);
 	CBDsMapAddString = reinterpret_cast<CBDsMapAddString_t>(p4);
+	return nullptr; // TODO: Change this when GmxGen updates.
 }
 
 dllx double libmulti_init() {

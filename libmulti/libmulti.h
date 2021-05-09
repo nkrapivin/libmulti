@@ -35,6 +35,8 @@ void libmulti_legacy_mutex_quit();
 /* GmxGen stuff below, change as needed: */
 #define dllx extern "C" __declspec(dllexport)
 
+/// Do not call this function at all.
+dllx char* RegisterCallbacks(char* please, char* dont, char* call, char* it);
 ///->real : Initializes the library.
 dllx double libmulti_init();
 ///->real : Destroys all windows and frees the library resources.
