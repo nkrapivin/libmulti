@@ -55,6 +55,8 @@ dllx double libmulti_create_window(double x, double y, double width, double heig
 dllx double libmulti_destroy(double window);
 ///->real : Sets the window caption.
 dllx double libmulti_set_caption(double window, char* caption);
+///->string : Gets the window's caption.
+dllx char* libmulti_get_caption(double window);
 ///->real : Draws a surface buffer inside the window.
 dllx double libmulti_make_bitmap(double window, double width, double height, char* buffer_ADDRESS);
 ///->real : Tells the extension which window is managed by GM.
@@ -86,7 +88,7 @@ dllx double libmulti_set_width(double window, double new_width);
 ///->real : Sets the height of the client area of the window.
 dllx double libmulti_set_height(double window, double new_height);
 ///->real : Sets the position of the client area of the window.
-dllx double libmulti_set_position(double window, double x, double y);
+dllx double libmulti_set_position(double window, double new_x, double new_y);
 ///->real : Sets the size of the client area of the window.
 dllx double libmulti_set_size(double window, double new_width, double new_height);
 ///->real : Sets the window's client area rectangle.
@@ -99,8 +101,6 @@ dllx double libmulti_get_nonclient_top(double window);
 dllx double libmulti_get_nonclient_right(double window);
 ///->real : Gets the bottom offset of the window's non-client area.
 dllx double libmulti_get_nonclient_bottom(double window);
-///->string : Gets the window's caption.
-dllx char* libmulti_get_caption(double window);
 ///->real : Sets the extended or window style.
 dllx double libmulti_set_window_style(double window, double is_extended, double style_value);
 ///->real : Gets the window or the extended style.

@@ -1,7 +1,7 @@
 {
     "id": "a8a9771e-0106-4002-b41d-5fed7c52b040",
     "modelName": "GMExtension",
-    "mvc": "1.2",
+    "mvc": "1.3",
     "name": "libmulti",
     "IncludedResources": [
         
@@ -200,6 +200,21 @@
                     "kind": 1,
                     "name": "libmulti_set_caption",
                     "returnType": 2
+                },
+                {
+                    "id": "89d87e6c-7429-7394-8f86-c241ac1a6ea2",
+                    "modelName": "GMExtensionFunction",
+                    "mvc": "1.0",
+                    "argCount": 1,
+                    "args": [
+                        2
+                    ],
+                    "externalName": "libmulti_get_caption",
+                    "help": "libmulti_get_caption(window) ->string  :  Gets the window's caption.",
+                    "hidden": false,
+                    "kind": 1,
+                    "name": "libmulti_get_caption",
+                    "returnType": 1
                 },
                 {
                     "id": "7da6d795-749c-dd65-795e-0862d14ed32b",
@@ -444,7 +459,7 @@
                         2
                     ],
                     "externalName": "libmulti_set_position",
-                    "help": "libmulti_set_position(window, x, y) ->real  :  Sets the position of the client area of the window.",
+                    "help": "libmulti_set_position(window, new_x, new_y) ->real  :  Sets the position of the client area of the window.",
                     "hidden": false,
                     "kind": 1,
                     "name": "libmulti_set_position",
@@ -545,21 +560,6 @@
                     "kind": 1,
                     "name": "libmulti_get_nonclient_bottom",
                     "returnType": 2
-                },
-                {
-                    "id": "89d87e6c-7429-7394-8f86-c241ac1a6ea2",
-                    "modelName": "GMExtensionFunction",
-                    "mvc": "1.0",
-                    "argCount": 1,
-                    "args": [
-                        2
-                    ],
-                    "externalName": "libmulti_get_caption",
-                    "help": "libmulti_get_caption(window) ->string  :  Gets the window's caption.",
-                    "hidden": false,
-                    "kind": 1,
-                    "name": "libmulti_get_caption",
-                    "returnType": 1
                 },
                 {
                     "id": "febb1c64-ce46-7857-7400-7e354ceacb69",

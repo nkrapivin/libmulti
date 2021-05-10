@@ -3,7 +3,7 @@
   "options": [],
   "exportToGame": true,
   "supportedTargets": -1,
-  "extensionVersion": "1.2.0",
+  "extensionVersion": "1.3",
   "packageId": "",
   "productId": "",
   "author": "",
@@ -51,6 +51,9 @@
             2,
             1,
           ],"resourceVersion":"1.0","name":"libmulti_set_caption","tags":[],"resourceType":"GMExtensionFunction",},
+        {"externalName":"libmulti_get_caption","kind":1,"help":"libmulti_get_caption(window) ->string  :  Gets the window's caption.","hidden":false,"returnType":1,"argCount":1,"args":[
+            2,
+          ],"resourceVersion":"1.0","name":"libmulti_get_caption","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_make_bitmap","kind":1,"help":"libmulti_make_bitmap(window, width, height, buffer_ADDRESS) ->real  :  Draws a surface buffer inside the window.","hidden":false,"returnType":2,"argCount":4,"args":[
             2,
             2,
@@ -99,7 +102,7 @@
             2,
             2,
           ],"resourceVersion":"1.0","name":"libmulti_set_height","tags":[],"resourceType":"GMExtensionFunction",},
-        {"externalName":"libmulti_set_position","kind":1,"help":"libmulti_set_position(window, x, y) ->real  :  Sets the position of the client area of the window.","hidden":false,"returnType":2,"argCount":3,"args":[
+        {"externalName":"libmulti_set_position","kind":1,"help":"libmulti_set_position(window, new_x, new_y) ->real  :  Sets the position of the client area of the window.","hidden":false,"returnType":2,"argCount":3,"args":[
             2,
             2,
             2,
@@ -128,9 +131,6 @@
         {"externalName":"libmulti_get_nonclient_bottom","kind":1,"help":"libmulti_get_nonclient_bottom(window) ->real  :  Gets the bottom offset of the window's non-client area.","hidden":false,"returnType":2,"argCount":1,"args":[
             2,
           ],"resourceVersion":"1.0","name":"libmulti_get_nonclient_bottom","tags":[],"resourceType":"GMExtensionFunction",},
-        {"externalName":"libmulti_get_caption","kind":1,"help":"libmulti_get_caption(window) ->string  :  Gets the window's caption.","hidden":false,"returnType":1,"argCount":1,"args":[
-            2,
-          ],"resourceVersion":"1.0","name":"libmulti_get_caption","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_set_window_style","kind":1,"help":"libmulti_set_window_style(window, is_extended, style_value) ->real  :  Sets the extended or window style.","hidden":false,"returnType":2,"argCount":3,"args":[
             2,
             2,
@@ -199,6 +199,7 @@
         {"name":"libmulti_create_window","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_destroy","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_set_caption","path":"extensions/libmulti/libmulti.yy",},
+        {"name":"libmulti_get_caption","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_make_bitmap","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_set_game_window","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_set_active_window","path":"extensions/libmulti/libmulti.yy",},
@@ -221,7 +222,6 @@
         {"name":"libmulti_get_nonclient_top","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_get_nonclient_right","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_get_nonclient_bottom","path":"extensions/libmulti/libmulti.yy",},
-        {"name":"libmulti_get_caption","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_set_window_style","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_get_window_style","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_set_min_width","path":"extensions/libmulti/libmulti.yy",},
