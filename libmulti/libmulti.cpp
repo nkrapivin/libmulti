@@ -10,6 +10,8 @@ std::vector<std::pair<HWND, CMultiD2D*>> vecWindows{ };
 DWORD LastError{ ERROR_SUCCESS };
 static char* LastString{ nullptr };
 static CRITICAL_SECTION* Mutex{ nullptr };
+static bool IsLegacy{ false };
+bool AltRGBMode{ false };
 
 void EnterVector() { EnterCriticalSection(Mutex); }
 void LeaveVector() { LeaveCriticalSection(Mutex); }
@@ -118,10 +120,10 @@ static bool _winapi_gm_paste_event(HWND hWnd, double window) {
 		if (ok == TRUE) {
 			clipdata = reinterpret_cast<LPCWSTR>(GetClipboardData(CF_UNICODETEXT));
 			if (clipdata != nullptr) {
-				need = WideCharToMultiByte(CP_UTF8, 0, clipdata, -1, nullptr, 0, nullptr, nullptr);
+				need = WideCharToMultiByte(IsLegacy ? CP_OEMCP : CP_UTF8, 0, clipdata, -1, nullptr, 0, nullptr, nullptr);
 				if (need > 0) {
 					mbclipdata = new char[need];
-					need = WideCharToMultiByte(CP_UTF8, 0, clipdata, -1, mbclipdata, need, nullptr, nullptr);
+					need = WideCharToMultiByte(IsLegacy ? CP_OEMCP : CP_UTF8, 0, clipdata, -1, mbclipdata, need, nullptr, nullptr);
 				}
 			}
 			ok = CloseClipboard();
@@ -205,7 +207,7 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 			WCHAR wch = static_cast<WCHAR>(wParam);
 			// process exactly one character.
 			// size - 1 because the function won't handle a null byte.
-			WideCharToMultiByte(CP_UTF8, 0, &wch, 1, mch, sizeof(mch) - 1, nullptr, nullptr);
+			WideCharToMultiByte(IsLegacy ? CP_OEMCP : CP_UTF8, 0, &wch, 1, mch, sizeof(mch) - 1, nullptr, nullptr);
 
 			double w_char = static_cast<double>(wParam);
 			// me can't do bit arithmetic so there we go:
@@ -261,7 +263,7 @@ static LRESULT WINAPI WindowProc(HWND hWnd, UINT Msg, WPARAM wParam, LPARAM lPar
 		}
 
 		case WM_PAINT: {
-			d2d->Create(hWnd);
+			d2d->Create(hWnd, AltRGBMode);
 			d2d->OnRender();
 			ValidateRect(hWnd, nullptr);
 			break;
@@ -394,13 +396,15 @@ dllx double libmulti_init() {
 	InitMultiD2D();
 	EnterVector();
 	nikWindowClass = register_window_class(WindowProc);
+	libmulti_cursor_init();
 	LeaveVector();
 
 	// RegisterCallbacks wasn't called? Are we in legacy GM?
-	if (CBCreateDsMap == nullptr) {
+	if (CBCreateDsMap == nullptr && CBDispatch == nullptr && CBDsMapAddReal == nullptr && CBDsMapAddString == nullptr) {
 		CBCreateDsMap = libmulti_legacy_create_ds_map;
 		CBDispatch = libmulti_legacy_dispatch_stub;
 		// initialize a custom event system
+		IsLegacy = true;
 		libmulti_legacy_mutex_init();
 		// overmars why
 	}
@@ -448,9 +452,9 @@ dllx char* libmulti_last_error_message() {
 
 	_libmulti_free();
 
-	int needed = WideCharToMultiByte(CP_UTF8, 0, err, -1, nullptr, 0, nullptr, nullptr);
+	int needed = WideCharToMultiByte(IsLegacy ? CP_OEMCP : CP_UTF8, 0, err, -1, nullptr, 0, nullptr, nullptr);
 	LastString = new char[needed];
-	needed = WideCharToMultiByte(CP_UTF8, 0, err, -1, LastString, needed, nullptr, nullptr);
+	needed = WideCharToMultiByte(IsLegacy ? CP_OEMCP : CP_UTF8, 0, err, -1, LastString, needed, nullptr, nullptr);
 	LastError = GetLastError();
 	LocalFree(err);
 	err = nullptr;
@@ -576,9 +580,9 @@ dllx double libmulti_set_caption(double index, char* _name) {
 			LastError = GetLastError();
 		}
 		else {
-			int needed = MultiByteToWideChar(CP_UTF8, 0, _name, -1, nullptr, 0);
+			int needed = MultiByteToWideChar(IsLegacy ? CP_OEMCP : CP_UTF8, 0, _name, -1, nullptr, 0);
 			LPWSTR wide = new WCHAR[needed];
-			MultiByteToWideChar(CP_UTF8, 0, _name, -1, wide, needed);
+			MultiByteToWideChar(IsLegacy ? CP_OEMCP : CP_UTF8, 0, _name, -1, wide, needed);
 			BOOL ok = SetWindowText(window, wide);
 			LastError = GetLastError();
 			delete[] wide;
@@ -602,9 +606,9 @@ dllx char* libmulti_get_caption(double index) {
 			int copied = GetWindowTextW(window, buf, chars + 1);
 			LastError = GetLastError();
 			if (chars == copied) {
-				int need = WideCharToMultiByte(CP_UTF8, 0, buf, -1, nullptr, 0, nullptr, nullptr);
+				int need = WideCharToMultiByte(IsLegacy ? CP_OEMCP : CP_UTF8, 0, buf, -1, nullptr, 0, nullptr, nullptr);
 				LastString = new char[need];
-				copied = WideCharToMultiByte(CP_UTF8, 0, buf, -1, LastString, need, nullptr, nullptr);
+				copied = WideCharToMultiByte(IsLegacy ? CP_OEMCP : CP_UTF8, 0, buf, -1, LastString, need, nullptr, nullptr);
 				LastError = GetLastError();
 				if (copied > 0) {
 					ret = LastString;
@@ -619,7 +623,7 @@ dllx char* libmulti_get_caption(double index) {
 }
 
 dllx double libmulti_make_bitmap(double index, double width, double height, char* _buf) {
-	if (!_libmulti_exists(index) || width < 0.0 || height < 0.0 || _buf == nullptr) return -1.0;
+	if (!_libmulti_exists(index) || width < 1.0 || height < 1.0 || _buf == nullptr) return -1.0;
 	else {
 		BOOL ret = FALSE;
 		EnterVector();

@@ -1,7 +1,7 @@
 {
     "id": "a8a9771e-0106-4002-b41d-5fed7c52b040",
     "modelName": "GMExtension",
-    "mvc": "1.3",
+    "mvc": "1.2.2",
     "name": "libmulti",
     "IncludedResources": [
         
@@ -68,6 +68,36 @@
                     "hidden": false,
                     "kind": 1,
                     "name": "libmulti_init",
+                    "returnType": 2
+                },
+                {
+                    "id": "ef0b3d4e-b3ff-be71-532e-d54d7e79ec4b",
+                    "modelName": "GMExtensionFunction",
+                    "mvc": "1.0",
+                    "argCount": 1,
+                    "args": [
+                        2
+                    ],
+                    "externalName": "libmulti_set_gms2_pixel_format",
+                    "help": "libmulti_set_gms2_pixel_format(truefalse) ->real  :  Enables or disables GMS 2 pixel format.",
+                    "hidden": false,
+                    "kind": 1,
+                    "name": "libmulti_set_gms2_pixel_format",
+                    "returnType": 2
+                },
+                {
+                    "id": "b95bb489-ff03-0bcf-c7fc-0038b2455a0e",
+                    "modelName": "GMExtensionFunction",
+                    "mvc": "1.0",
+                    "argCount": 0,
+                    "args": [
+                        
+                    ],
+                    "externalName": "libmulti_get_gms2_pixel_format",
+                    "help": "libmulti_get_gms2_pixel_format() ->real  :  Returns if the GMS 2 pixel format is enabled or not.",
+                    "hidden": false,
+                    "kind": 1,
+                    "name": "libmulti_get_gms2_pixel_format",
                     "returnType": 2
                 },
                 {

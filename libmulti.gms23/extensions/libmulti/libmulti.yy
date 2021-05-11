@@ -3,7 +3,7 @@
   "options": [],
   "exportToGame": true,
   "supportedTargets": -1,
-  "extensionVersion": "1.3",
+  "extensionVersion": "1.2.2",
   "packageId": "",
   "productId": "",
   "author": "",
@@ -24,6 +24,10 @@
             1,
           ],"resourceVersion":"1.0","name":"RegisterCallbacks","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_init","kind":1,"help":"libmulti_init() ->real  :  Initializes the library.","hidden":false,"returnType":2,"argCount":0,"args":[],"resourceVersion":"1.0","name":"libmulti_init","tags":[],"resourceType":"GMExtensionFunction",},
+        {"externalName":"libmulti_set_gms2_pixel_format","kind":1,"help":"libmulti_set_gms2_pixel_format(truefalse) ->real  :  Enables or disables GMS 2 pixel format.","hidden":false,"returnType":2,"argCount":1,"args":[
+            2,
+          ],"resourceVersion":"1.0","name":"libmulti_set_gms2_pixel_format","tags":[],"resourceType":"GMExtensionFunction",},
+        {"externalName":"libmulti_get_gms2_pixel_format","kind":1,"help":"libmulti_get_gms2_pixel_format() ->real  :  Returns if the GMS 2 pixel format is enabled or not.","hidden":false,"returnType":2,"argCount":0,"args":[],"resourceVersion":"1.0","name":"libmulti_get_gms2_pixel_format","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_quit","kind":1,"help":"libmulti_quit() ->real  :  Destroys all windows and frees the library resources.","hidden":false,"returnType":2,"argCount":0,"args":[],"resourceVersion":"1.0","name":"libmulti_quit","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_present","kind":1,"help":"libmulti_present() ->real  :  Returns true if the DLL is present and was loaded.","hidden":false,"returnType":2,"argCount":0,"args":[],"resourceVersion":"1.0","name":"libmulti_present","tags":[],"resourceType":"GMExtensionFunction",},
         {"externalName":"libmulti_exists","kind":1,"help":"libmulti_exists(window) ->real  :  Checks if a window index is valid and the window exists.","hidden":false,"returnType":2,"argCount":1,"args":[
@@ -191,6 +195,8 @@
       ],"copyToTargets":64,"order":[
         {"name":"RegisterCallbacks","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_init","path":"extensions/libmulti/libmulti.yy",},
+        {"name":"libmulti_set_gms2_pixel_format","path":"extensions/libmulti/libmulti.yy",},
+        {"name":"libmulti_get_gms2_pixel_format","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_quit","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_present","path":"extensions/libmulti/libmulti.yy",},
         {"name":"libmulti_exists","path":"extensions/libmulti/libmulti.yy",},

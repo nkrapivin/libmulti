@@ -8,9 +8,8 @@
 #include <iomanip>
 
 static CRITICAL_SECTION* LegacyMutex{ nullptr };
-static std::queue<std::string> EventQueue{};
-static bool DoClean{ false };
-static char* TempCopy{ nullptr };
+//                                       name         strvalue     realval is_string
+static std::queue<std::vector<std::tuple<std::string, std::string, double, bool>>> EventQueue{};
 
 void libmulti_legacy_mutex_init() {
 	LegacyMutex = new CRITICAL_SECTION();
@@ -28,32 +27,27 @@ int libmulti_legacy_create_ds_map(int _num, ...) {
 	va_list args;
 	va_start(args, _num);
 
-	EnterCriticalSection(LegacyMutex);
+	std::vector<std::tuple<std::string, std::string, double, bool>> vecevent{ };
+	vecevent.reserve(_num);
+	int ind = -1;
 
-	std::stringstream ss{};
-	ss << "var __libmulti_async_load;" << std::endl << "__libmulti_async_load = ds_map_create();" << std::endl;;
+	EnterCriticalSection(LegacyMutex);
 
 	for (int i = 0; i < _num; i++) {
 		const char* name = va_arg(args, char*);
 		double dbl = va_arg(args, double);
 		const char* value = va_arg(args, char*);
 
-		ss << "ds_map_add(__libmulti_async_load, \"" << name << "\", ";
-
 		if (value == nullptr) {
-			ss << std::fixed << dbl;
+			vecevent.push_back(std::make_tuple(name, "", dbl, false));
 		}
 		else {
-			ss << '"' << value << '"';
+			vecevent.push_back(std::make_tuple(name, value, 0.0, true));
 		}
-
-		ss << ");" << std::endl;
 	}
 
-	ss << "return script_execute(argument0, __libmulti_async_load);" << std::endl;
-
-	EventQueue.push(ss.str());
-	int ind = static_cast<int>(EventQueue.size()) - 1;
+	EventQueue.push(vecevent);
+	ind = static_cast<int>(EventQueue.size()) - 1;
 
 	LeaveCriticalSection(LegacyMutex);
 
@@ -66,33 +60,78 @@ void libmulti_legacy_dispatch_stub(int ds_map, int event_index) {
 }
 
 dllx double libmulti_legacy_check() {
-	return static_cast<double>(EventQueue.size());
+	double size = 0.0;
+
+	EnterCriticalSection(LegacyMutex);
+	size = static_cast<double>(EventQueue.size());
+	LeaveCriticalSection(LegacyMutex);
+
+	return size;
 }
 
-dllx const char* libmulti_legacy_dispatch() {
+dllx double libmulti_legacy_done() {
+	double ret = 0.0;
+
+	EnterCriticalSection(LegacyMutex);
+
 	if (!(EventQueue.empty())) {
-		std::string evstr{ EventQueue.front() };
-
-		if (TempCopy != nullptr) {
-			delete[] TempCopy;
-		}
-
-		std::size_t siz = evstr.length() + 1;
-		TempCopy = new char[siz];
-		memset(TempCopy, '\0', siz);
-
-		std::size_t i = 0;
-		for (const auto& c : evstr) {
-			TempCopy[i] = c;
-			i++;
-		}
-
 		EventQueue.pop();
-		return TempCopy;
+		ret = 1.0;
 	}
-	else {
-		return "";
-	}
+
+	LeaveCriticalSection(LegacyMutex);
+
+	return ret;
+}
+
+dllx double libmulti_legacy_event_length() {
+	double len = 0.0;
+
+	EnterCriticalSection(LegacyMutex);
+	len = static_cast<double>(EventQueue.front().size());
+	LeaveCriticalSection(LegacyMutex);
+
+	return len;
+}
+
+dllx const char* libmulti_legacy_event_value_name(double num) {
+	const char* ret = "";
+
+	EnterCriticalSection(LegacyMutex);
+	ret = std::get<0>(EventQueue.front()[static_cast<std::size_t>(num)]).c_str();
+	LeaveCriticalSection(LegacyMutex);
+
+	return ret;
+}
+
+dllx const char* libmulti_legacy_event_value_string(double num) {
+	const char* ret = "";
+
+	EnterCriticalSection(LegacyMutex);
+	ret = std::get<1>(EventQueue.front()[static_cast<std::size_t>(num)]).c_str();
+	LeaveCriticalSection(LegacyMutex);
+
+	return ret;
+}
+
+dllx double libmulti_legacy_event_value_real(double num) {
+	double ret = 0.0;
+
+	EnterCriticalSection(LegacyMutex);
+	ret = std::get<2>(EventQueue.front()[static_cast<std::size_t>(num)]);
+	LeaveCriticalSection(LegacyMutex);
+
+	return ret;
+}
+
+dllx double libmulti_legacy_event_is_string(double num) {
+	double ret = -1.0;
+
+	EnterCriticalSection(LegacyMutex);
+	ret = std::get<3>(EventQueue.front()[static_cast<std::size_t>(num)]);
+	LeaveCriticalSection(LegacyMutex);
+
+	return ret;
 }
 
 dllx double libmulti_make_bitmap_from_file(double index, char* _fileName) {

@@ -185,6 +185,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="libmulti.cpp" />
+    <ClCompile Include="libmulti_cursor.cpp" />
     <ClCompile Include="libmulti_dllmain.cpp" />
     <ClCompile Include="libmulti_focus.cpp" />
     <ClCompile Include="libmulti_legacy.cpp" />

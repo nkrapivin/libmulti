@@ -6,8 +6,11 @@
 // internal libmulti stuff.
 void EnterVector();
 void LeaveVector();
+void libmulti_cursor_init(void);
+HCURSOR libmulti_cursor_get_from_gm(int v);
 extern HMODULE hModule;
 extern DWORD LastError;
+extern bool AltRGBMode;
 extern std::vector<std::pair<HWND, CMultiD2D*>> vecWindows;
 bool _libmulti_exists(double window);
 DWORD WINAPI libmulti_window_thread(LPVOID lpThreadParameter);
@@ -39,6 +42,10 @@ void libmulti_legacy_mutex_quit();
 dllx char* RegisterCallbacks(char* please, char* dont, char* call, char* it);
 ///->real : Initializes the library.
 dllx double libmulti_init();
+///->real : Enables or disables GMS 2 pixel format.
+dllx double libmulti_set_gms2_pixel_format(double truefalse);
+///->real : Returns if the GMS 2 pixel format is enabled or not.
+dllx double libmulti_get_gms2_pixel_format();
 ///->real : Destroys all windows and frees the library resources.
 dllx double libmulti_quit();
 ///->real : Returns true if the DLL is present and was loaded.

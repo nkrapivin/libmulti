@@ -24,7 +24,7 @@ public:
 	CMultiD2D();
 	~CMultiD2D();
 
-	HRESULT Create(HWND window);
+	HRESULT Create(HWND window, bool altrgbmode);
 	void Discard(); // Releases all resources EXCEPT for the user defined bitmap.
 	HRESULT OnResize(UINT w, UINT h);
 	HRESULT OnRender();

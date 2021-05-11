@@ -46,4 +46,9 @@ function libmulti_get_max_height(window:real):real
 function libmulti_mouse_get_x(window:real):real
 function libmulti_mouse_get_y(window:real):real
 function libmulti_legacy_check():real
-function libmulti_legacy_dispatch():string
+function libmulti_legacy_done():real
+function libmulti_legacy_event_length():real
+function libmulti_legacy_event_is_string(index:real):real
+function libmulti_legacy_event_value_name(index:real):string
+function libmulti_legacy_event_value_real(index:real):real
+function libmulti_legacy_event_value_string(index:real):string

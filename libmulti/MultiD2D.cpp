@@ -62,7 +62,7 @@ void CMultiD2D::Discard() {
 	this->leave();
 }
 
-HRESULT CMultiD2D::Create(HWND window) {
+HRESULT CMultiD2D::Create(HWND window, bool altrgbmode) {
 	HRESULT hR = S_OK;
 	FLOAT dpiX = 0.0f, dpiY = 0.0f;
 
@@ -73,7 +73,7 @@ HRESULT CMultiD2D::Create(HWND window) {
 		RECT rc;
 		GetClientRect(window, &rc);
 		D2D1_SIZE_U size = D2D1::SizeU(rc.right - rc.left, rc.bottom - rc.top);
-		hR = ms_Factory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(), D2D1::HwndRenderTargetProperties(window, size), &this->m_rt);
+		hR = ms_Factory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(D2D1_RENDER_TARGET_TYPE::D2D1_RENDER_TARGET_TYPE_HARDWARE), D2D1::HwndRenderTargetProperties(window, size), &this->m_rt);
 	}
 	ms_Factory->GetDesktopDpi(&dpiX, &dpiY);
 	LeaveFactory();
@@ -85,8 +85,8 @@ HRESULT CMultiD2D::Create(HWND window) {
 			D2D1_BITMAP_PROPERTIES props;
 			props.dpiX = dpiX;
 			props.dpiY = dpiY;
-			props.pixelFormat.alphaMode = D2D1_ALPHA_MODE::D2D1_ALPHA_MODE_PREMULTIPLIED;
-			props.pixelFormat.format = DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
+			props.pixelFormat.alphaMode = D2D1_ALPHA_MODE::D2D1_ALPHA_MODE_IGNORE;
+			props.pixelFormat.format = altrgbmode ? DXGI_FORMAT::DXGI_FORMAT_R8G8B8A8_UNORM : DXGI_FORMAT::DXGI_FORMAT_B8G8R8A8_UNORM;
 			hR = this->m_rt->CreateBitmap(bmsize, this->m_bitmapP, this->m_bitmapW * 4, props, &this->m_bitmap);
 		}
 		else {

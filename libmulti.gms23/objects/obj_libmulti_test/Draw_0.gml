@@ -58,7 +58,7 @@ for (var i = 0; i < ds_list_size(windows); i++) {
     
     xx = 8;
     yy = 8 + 64 + 8;
-    draw_set_color(c_black);
+    draw_set_color(c_red);
     str = "a libmulti window, window id: " + string(_w) + nl
     + "x: " + string(wx) + nl
     + "y: " + string(wy) + nl

@@ -16,7 +16,7 @@ ATOM register_window_class(WNDPROC p) {
 	wnd.cbWndExtra = 0;
 	wnd.hInstance = hModule;
 	wnd.hIcon = nullptr;
-	wnd.hCursor = LoadCursor(nullptr, IDC_ARROW);
+	wnd.hCursor = libmulti_cursor_get_from_gm(0);
 	wnd.hbrBackground = reinterpret_cast<HBRUSH>(COLOR_WINDOWFRAME);
 	wnd.lpszMenuName = nullptr;
 	wnd.lpszClassName = TEXT("LibMultiNikIsAFool");
